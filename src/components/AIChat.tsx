@@ -82,7 +82,7 @@ Expense Summary:
         body: JSON.stringify({
           contents: [{
             parts: [{
-              text: `You are a helpful financial assistant for Monee Manager, an expense tracking app. You help users analyze their spending patterns, provide budgeting advice, and answer questions about their expenses.
+              text: `You are a helpful financial assistant for Budgeteer, an expense tracking app. You help users analyze their spending patterns, provide budgeting advice, and answer questions about their expenses.
 
 Current user's expense data:
 ${generateExpenseContext()}
@@ -132,43 +132,46 @@ Be helpful, concise, and provide actionable financial advice. If asked about exp
   };
 
   return (
-    <Card className="h-[600px] flex flex-col">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+    <Card className="h-[600px] flex flex-col overflow-hidden border-none shadow-lg">
+      <CardHeader className="bg-gradient-to-r from-teal-600/10 to-blue-600/10">
+        <CardTitle className="flex items-center gap-2 text-teal-700">
           <Bot className="h-5 w-5" />
-          AI Financial Assistant
+          Financial Assistant
         </CardTitle>
         <CardDescription>
           Ask me anything about your expenses, budgeting, or financial advice
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex-1 flex flex-col">
-        <ScrollArea className="flex-1 mb-4 p-4 border rounded-md">
+      <CardContent className="flex-1 flex flex-col p-0">
+        <ScrollArea className="flex-1 p-4 border-0">
           {messages.length === 0 ? (
-            <div className="text-center text-gray-500 mt-8">
+            <div className="text-center text-gray-500 mt-8 animate-fade-in">
               <MessageSquare className="h-12 w-12 mx-auto mb-4 opacity-50" />
               <p>Start a conversation with your AI assistant!</p>
               <p className="text-sm mt-2">
-                Try asking: "Give me a report on my spending this month" or "How can I reduce my expenses?"
+                Try asking: "Give me a report on my spending" or "How can I reduce my expenses?"
               </p>
             </div>
           ) : (
-            <div className="space-y-4">
-              {messages.map((message) => (
+            <div className="space-y-4 p-2">
+              {messages.map((message, index) => (
                 <div
                   key={message.id}
-                  className={`flex items-start gap-3 ${
+                  className={`flex items-start gap-3 animate-fade-in ${
                     message.role === "user" ? "justify-end" : "justify-start"
                   }`}
+                  style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   {message.role === "assistant" && (
-                    <Bot className="h-6 w-6 mt-1 text-blue-500" />
+                    <div className="bg-teal-100 p-2 rounded-full">
+                      <Bot className="h-6 w-6 text-teal-600" />
+                    </div>
                   )}
                   <div
-                    className={`max-w-[80%] p-3 rounded-lg ${
+                    className={`max-w-[80%] p-4 rounded-lg shadow-md ${
                       message.role === "user"
-                        ? "bg-blue-500 text-white"
-                        : "bg-gray-100 text-gray-900"
+                        ? "bg-gradient-to-r from-teal-500 to-blue-500 text-white"
+                        : "bg-white border border-slate-100"
                     }`}
                   >
                     <p className="whitespace-pre-wrap">{message.content}</p>
@@ -177,15 +180,20 @@ Be helpful, concise, and provide actionable financial advice. If asked about exp
                     </p>
                   </div>
                   {message.role === "user" && (
-                    <User className="h-6 w-6 mt-1 text-gray-500" />
+                    <div className="bg-blue-100 p-2 rounded-full">
+                      <User className="h-6 w-6 text-blue-600" />
+                    </div>
                   )}
                 </div>
               ))}
               {isLoading && (
-                <div className="flex items-start gap-3">
-                  <Bot className="h-6 w-6 mt-1 text-blue-500" />
-                  <div className="bg-gray-100 p-3 rounded-lg">
-                    <p>Thinking...</p>
+                <div className="flex items-start gap-3 animate-pulse">
+                  <div className="bg-teal-100 p-2 rounded-full">
+                    <Bot className="h-6 w-6 text-teal-600" />
+                  </div>
+                  <div className="bg-white p-4 rounded-lg shadow-md max-w-[80%] border border-slate-100">
+                    <div className="h-4 bg-slate-200 rounded w-3/4 mb-2"></div>
+                    <div className="h-4 bg-slate-200 rounded w-1/2"></div>
                   </div>
                 </div>
               )}
@@ -193,18 +201,20 @@ Be helpful, concise, and provide actionable financial advice. If asked about exp
           )}
         </ScrollArea>
         
-        <div className="flex gap-2">
-          <Textarea
-            placeholder="Ask me about your expenses..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyPress}
-            className="flex-1"
-            rows={2}
-          />
-          <Button onClick={sendMessage} disabled={isLoading}>
-            <Send className="h-4 w-4" />
-          </Button>
+        <div className="p-4 border-t border-slate-200 bg-slate-50">
+          <div className="flex gap-2">
+            <Textarea
+              placeholder="Ask me about your expenses..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyPress}
+              className="flex-1 resize-none focus-visible:ring-teal-500"
+              rows={2}
+            />
+            <Button onClick={sendMessage} disabled={isLoading} className="self-end bg-teal-600 hover:bg-teal-700 transition-all duration-200 hover:scale-105">
+              <Send className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>

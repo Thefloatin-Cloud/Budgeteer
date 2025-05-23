@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Settings as SettingsIcon, Key, Eye, EyeOff } from "lucide-react";
+import { Settings as SettingsIcon, Key, Eye, EyeOff, AlertTriangle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface SettingsProps {
@@ -27,8 +27,8 @@ export const Settings = ({ apiKey, onSaveApiKey }: SettingsProps) => {
 
   const clearData = () => {
     if (confirm("Are you sure you want to clear all expense data? This action cannot be undone.")) {
-      localStorage.removeItem("monee-expenses");
-      localStorage.removeItem("monee-api-key");
+      localStorage.removeItem("budgeteer-expenses");
+      localStorage.removeItem("budgeteer-api-key");
       onSaveApiKey("");
       setNewApiKey("");
       toast({
@@ -40,21 +40,21 @@ export const Settings = ({ apiKey, onSaveApiKey }: SettingsProps) => {
   };
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+    <div className="space-y-8">
+      <Card className="overflow-hidden border-none shadow-lg transition-all duration-300 hover:shadow-xl">
+        <CardHeader className="bg-gradient-to-r from-teal-600/10 to-blue-600/10">
+          <CardTitle className="flex items-center gap-2 text-teal-700">
             <SettingsIcon className="h-5 w-5" />
             Settings
           </CardTitle>
           <CardDescription>
-            Configure your Monee Manager preferences
+            Configure your Budgeteer preferences
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-6 p-6">
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="api-key" className="flex items-center gap-2">
+              <Label htmlFor="api-key" className="flex items-center gap-2 text-slate-700">
                 <Key className="h-4 w-4" />
                 Google Gemini API Key
               </Label>
@@ -66,6 +66,7 @@ export const Settings = ({ apiKey, onSaveApiKey }: SettingsProps) => {
                     placeholder="Enter your Google Gemini API key"
                     value={newApiKey}
                     onChange={(e) => setNewApiKey(e.target.value)}
+                    className="pr-10 focus-visible:ring-teal-500"
                   />
                   <Button
                     type="button"
@@ -81,7 +82,7 @@ export const Settings = ({ apiKey, onSaveApiKey }: SettingsProps) => {
                     )}
                   </Button>
                 </div>
-                <Button onClick={handleSave}>Save</Button>
+                <Button onClick={handleSave} className="bg-teal-600 hover:bg-teal-700">Save</Button>
               </div>
               <p className="text-sm text-gray-600">
                 Get your API key from{" "}
@@ -89,7 +90,7 @@ export const Settings = ({ apiKey, onSaveApiKey }: SettingsProps) => {
                   href="https://aistudio.google.com/app/apikey"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-500 hover:underline"
+                  className="text-teal-600 hover:underline"
                 >
                   Google AI Studio
                 </a>
@@ -99,15 +100,18 @@ export const Settings = ({ apiKey, onSaveApiKey }: SettingsProps) => {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Data Management</CardTitle>
+      <Card className="overflow-hidden border-none shadow-lg transition-all duration-300 hover:shadow-xl">
+        <CardHeader className="bg-gradient-to-r from-rose-600/10 to-orange-600/10">
+          <CardTitle className="flex items-center gap-2 text-rose-700">
+            <AlertTriangle className="h-5 w-5" />
+            Data Management
+          </CardTitle>
           <CardDescription>
             Manage your expense data
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <Button variant="destructive" onClick={clearData}>
+        <CardContent className="p-6">
+          <Button variant="destructive" onClick={clearData} className="bg-rose-600 hover:bg-rose-700">
             Clear All Data
           </Button>
           <p className="text-sm text-gray-600 mt-2">
@@ -116,13 +120,13 @@ export const Settings = ({ apiKey, onSaveApiKey }: SettingsProps) => {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>About Monee Manager</CardTitle>
+      <Card className="overflow-hidden border-none shadow-lg transition-all duration-300 hover:shadow-xl">
+        <CardHeader className="bg-gradient-to-r from-blue-600/10 to-indigo-600/10">
+          <CardTitle className="text-blue-700">About Budgeteer</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-6">
           <p className="text-sm text-gray-600">
-            Monee Manager is an AI-powered expense tracking application that helps you manage your finances intelligently.
+            Budgeteer is an AI-powered expense tracking application that helps you manage your finances intelligently.
             Track your expenses, get AI insights, and make better financial decisions.
           </p>
         </CardContent>
