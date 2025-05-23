@@ -56,14 +56,14 @@ export const Settings = ({ apiKey, onSaveApiKey }: SettingsProps) => {
             <div className="space-y-2">
               <Label htmlFor="api-key" className="flex items-center gap-2">
                 <Key className="h-4 w-4" />
-                OpenAI API Key
+                Google Gemini API Key
               </Label>
               <div className="flex gap-2">
                 <div className="relative flex-1">
                   <Input
                     id="api-key"
                     type={showApiKey ? "text" : "password"}
-                    placeholder="Enter your OpenAI API key"
+                    placeholder="Enter your Google Gemini API key"
                     value={newApiKey}
                     onChange={(e) => setNewApiKey(e.target.value)}
                   />
@@ -86,12 +86,12 @@ export const Settings = ({ apiKey, onSaveApiKey }: SettingsProps) => {
               <p className="text-sm text-gray-600">
                 Get your API key from{" "}
                 <a
-                  href="https://platform.openai.com/api-keys"
+                  href="https://aistudio.google.com/app/apikey"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-500 hover:underline"
                 >
-                  OpenAI Platform
+                  Google AI Studio
                 </a>
               </p>
             </div>

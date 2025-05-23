@@ -56,7 +56,7 @@ Expense Summary:
     if (!apiKey) {
       toast({
         title: "API Key Required",
-        description: "Please set your OpenAI API key in Settings first.",
+        description: "Please set your Google Gemini API key in Settings first.",
         variant: "destructive",
       });
       return;
@@ -74,31 +74,28 @@ Expense Summary:
     setIsLoading(true);
 
     try {
-      const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`, {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${apiKey}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "gpt-3.5-turbo",
-          messages: [
-            {
-              role: "system",
-              content: `You are a helpful financial assistant for Monee Manager, an expense tracking app. You help users analyze their spending patterns, provide budgeting advice, and answer questions about their expenses. 
+          contents: [{
+            parts: [{
+              text: `You are a helpful financial assistant for Monee Manager, an expense tracking app. You help users analyze their spending patterns, provide budgeting advice, and answer questions about their expenses.
 
 Current user's expense data:
 ${generateExpenseContext()}
 
+User question: ${input}
+
 Be helpful, concise, and provide actionable financial advice. If asked about expenses, refer to the actual data provided above.`
-            },
-            {
-              role: "user",
-              content: input
-            }
-          ],
-          max_tokens: 500,
-          temperature: 0.7,
+            }]
+          }],
+          generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 500,
+          }
         }),
       });
 
@@ -109,7 +106,7 @@ Be helpful, concise, and provide actionable financial advice. If asked about exp
       const data = await response.json();
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: data.choices[0].message.content,
+        content: data.candidates[0].content.parts[0].text,
         role: "assistant",
         timestamp: new Date().toISOString(),
       };
