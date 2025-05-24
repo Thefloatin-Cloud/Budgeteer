@@ -41,20 +41,20 @@ export const Settings = ({ apiKey, onSaveApiKey }: SettingsProps) => {
 
   return (
     <div className="space-y-8">
-      <Card className="overflow-hidden border-none shadow-lg transition-all duration-300 hover:shadow-xl">
-        <CardHeader className="bg-gradient-to-r from-teal-600/10 to-blue-600/10">
-          <CardTitle className="flex items-center gap-2 text-teal-700">
+      <Card className="overflow-hidden border-none shadow-lg transition-all duration-300 hover:shadow-xl bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800">
+        <CardHeader className="bg-gradient-to-r from-teal-600/10 to-blue-600/10 dark:from-teal-400/10 dark:to-blue-400/10">
+          <CardTitle className="flex items-center gap-2 text-teal-700 dark:text-teal-400">
             <SettingsIcon className="h-5 w-5" />
             Settings
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="dark:text-gray-400">
             Configure your Budgeteer preferences
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6 p-6">
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="api-key" className="flex items-center gap-2 text-slate-700">
+              <Label htmlFor="api-key" className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
                 <Key className="h-4 w-4" />
                 Google Gemini API Key
               </Label>
@@ -66,13 +66,13 @@ export const Settings = ({ apiKey, onSaveApiKey }: SettingsProps) => {
                     placeholder="Enter your Google Gemini API key"
                     value={newApiKey}
                     onChange={(e) => setNewApiKey(e.target.value)}
-                    className="pr-10 focus-visible:ring-teal-500"
+                    className="pr-10 focus-visible:ring-teal-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent dark:hover:bg-transparent"
                     onClick={() => setShowApiKey(!showApiKey)}
                   >
                     {showApiKey ? (
@@ -82,15 +82,15 @@ export const Settings = ({ apiKey, onSaveApiKey }: SettingsProps) => {
                     )}
                   </Button>
                 </div>
-                <Button onClick={handleSave} className="bg-teal-600 hover:bg-teal-700">Save</Button>
+                <Button onClick={handleSave} className="bg-teal-600 hover:bg-teal-700 dark:bg-teal-600 dark:hover:bg-teal-700">Save</Button>
               </div>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 Get your API key from{" "}
                 <a
                   href="https://aistudio.google.com/app/apikey"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-teal-600 hover:underline"
+                  className="text-teal-600 dark:text-teal-400 hover:underline"
                 >
                   Google AI Studio
                 </a>
@@ -100,32 +100,32 @@ export const Settings = ({ apiKey, onSaveApiKey }: SettingsProps) => {
         </CardContent>
       </Card>
 
-      <Card className="overflow-hidden border-none shadow-lg transition-all duration-300 hover:shadow-xl">
-        <CardHeader className="bg-gradient-to-r from-rose-600/10 to-orange-600/10">
-          <CardTitle className="flex items-center gap-2 text-rose-700">
+      <Card className="overflow-hidden border-none shadow-lg transition-all duration-300 hover:shadow-xl bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800">
+        <CardHeader className="bg-gradient-to-r from-rose-600/10 to-orange-600/10 dark:from-rose-400/10 dark:to-orange-400/10">
+          <CardTitle className="flex items-center gap-2 text-rose-700 dark:text-rose-400">
             <AlertTriangle className="h-5 w-5" />
             Data Management
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="dark:text-gray-400">
             Manage your expense data
           </CardDescription>
         </CardHeader>
         <CardContent className="p-6">
-          <Button variant="destructive" onClick={clearData} className="bg-rose-600 hover:bg-rose-700">
+          <Button variant="destructive" onClick={clearData} className="bg-rose-600 hover:bg-rose-700 dark:bg-rose-600 dark:hover:bg-rose-700">
             Clear All Data
           </Button>
-          <p className="text-sm text-gray-600 mt-2">
+          <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
             This will permanently delete all your expense data.
           </p>
         </CardContent>
       </Card>
 
-      <Card className="overflow-hidden border-none shadow-lg transition-all duration-300 hover:shadow-xl">
-        <CardHeader className="bg-gradient-to-r from-blue-600/10 to-indigo-600/10">
-          <CardTitle className="text-blue-700">About Budgeteer</CardTitle>
+      <Card className="overflow-hidden border-none shadow-lg transition-all duration-300 hover:shadow-xl bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800">
+        <CardHeader className="bg-gradient-to-r from-blue-600/10 to-indigo-600/10 dark:from-blue-400/10 dark:to-indigo-400/10">
+          <CardTitle className="text-blue-700 dark:text-blue-400">About Budgeteer</CardTitle>
         </CardHeader>
         <CardContent className="p-6">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
             Budgeteer is an AI-powered expense tracking application that helps you manage your finances intelligently.
             Track your expenses, get AI insights, and make better financial decisions.
           </p>

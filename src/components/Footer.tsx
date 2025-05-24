@@ -5,15 +5,15 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 
 export const Footer = () => {
   return (
-    <footer className="w-full bg-white border-t border-gray-200 py-4 px-6">
+    <footer className="w-full bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 py-4 px-6 transition-colors duration-300">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <div className="text-left">
-          <p className="text-sm text-gray-500">&copy; 2025 Apoorv Mane. All rights reserved.</p>
-          <p className="text-xs text-gray-400 mt-1">Made by Apoorv Mane</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">&copy; 2025 Apoorv Mane. All rights reserved.</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Made by Apoorv Mane</p>
         </div>
 
         <div className="flex items-center gap-4">
-          <p className="text-sm text-gray-500 mr-2">Contact me</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mr-2">Contact me</p>
           
           <Tooltip>
             <TooltipTrigger asChild>
@@ -22,7 +22,7 @@ export const Footer = () => {
                 aria-label="Email"
                 className="transition-transform hover:scale-110"
               >
-                <Button variant="ghost" size="icon" className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 h-8 w-8">
+                <Button variant="ghost" size="icon" className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 h-8 w-8 transition-colors duration-200">
                   <Mail className="h-4 w-4" />
                 </Button>
               </a>
@@ -41,7 +41,7 @@ export const Footer = () => {
                 aria-label="Instagram"
                 className="transition-transform hover:scale-110"
               >
-                <Button variant="ghost" size="icon" className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 h-8 w-8">
+                <Button variant="ghost" size="icon" className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 h-8 w-8 transition-colors duration-200">
                   <Instagram className="h-4 w-4" />
                 </Button>
               </a>
@@ -60,7 +60,7 @@ export const Footer = () => {
                 aria-label="LinkedIn"
                 className="transition-transform hover:scale-110"
               >
-                <Button variant="ghost" size="icon" className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 h-8 w-8">
+                <Button variant="ghost" size="icon" className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 h-8 w-8 transition-colors duration-200">
                   <Linkedin className="h-4 w-4" />
                 </Button>
               </a>

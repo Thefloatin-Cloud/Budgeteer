@@ -8,6 +8,7 @@ import { ExpenseReport } from "@/components/ExpenseReport";
 import { Sidebar } from "@/components/Sidebar";
 import { Dashboard } from "@/components/Dashboard";
 import { Footer } from "@/components/Footer";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 export interface Expense {
   id: string;
@@ -65,8 +66,8 @@ const Index = () => {
         return <Dashboard expenses={expenses} onTabChange={setActiveTab} />;
       case "expenses":
         return (
-          <div className="h-full flex">
-            <div className="w-1/2 p-4 border-r border-gray-200">
+          <div className="h-full flex bg-gray-50 dark:bg-black transition-colors duration-300">
+            <div className="w-1/2 p-4 border-r border-gray-200 dark:border-gray-800">
               <ExpenseTracker 
                 expenses={expenses} 
                 onAddExpense={addExpense}
@@ -83,19 +84,19 @@ const Index = () => {
         );
       case "report":
         return (
-          <div className="h-full p-6 overflow-auto">
+          <div className="h-full p-6 overflow-auto bg-gray-50 dark:bg-black transition-colors duration-300">
             <ExpenseReport expenses={expenses} />
           </div>
         );
       case "ai-chat":
         return (
-          <div className="h-full p-6 overflow-auto">
+          <div className="h-full p-6 overflow-auto bg-gray-50 dark:bg-black transition-colors duration-300">
             <AIChat expenses={expenses} apiKey={apiKey} />
           </div>
         );
       case "settings":
         return (
-          <div className="h-full p-6 overflow-auto">
+          <div className="h-full p-6 overflow-auto bg-gray-50 dark:bg-black transition-colors duration-300">
             <Settings apiKey={apiKey} onSaveApiKey={saveApiKey} />
           </div>
         );
@@ -105,15 +106,17 @@ const Index = () => {
   };
 
   return (
-    <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
-      <div className="flex flex-1 w-full overflow-hidden">
-        <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
-        <div className="flex-1 bg-white overflow-hidden">
-          {renderContent()}
+    <ThemeProvider defaultTheme="light" storageKey="budgeteer-theme">
+      <div className="h-screen bg-gray-50 dark:bg-black flex flex-col overflow-hidden transition-colors duration-300">
+        <div className="flex flex-1 w-full overflow-hidden">
+          <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
+          <div className="flex-1 bg-white dark:bg-gray-900 overflow-hidden transition-colors duration-300">
+            {renderContent()}
+          </div>
         </div>
+        <Footer />
       </div>
-      <Footer />
-    </div>
+    </ThemeProvider>
   );
 };
 

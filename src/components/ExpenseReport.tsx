@@ -10,12 +10,12 @@ interface ExpenseReportProps {
 export const ExpenseReport = ({ expenses }: ExpenseReportProps) => {
   if (expenses.length === 0) {
     return (
-      <Card>
+      <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 transition-colors duration-300">
         <CardContent className="pt-6">
           <div className="text-center py-8">
-            <BarChart3 className="h-12 w-12 mx-auto mb-4 opacity-50" />
-            <p className="text-gray-500">No expenses to analyze yet.</p>
-            <p className="text-sm text-gray-400 mt-2">
+            <BarChart3 className="h-12 w-12 mx-auto mb-4 opacity-50 text-gray-400 dark:text-gray-600" />
+            <p className="text-gray-500 dark:text-gray-400">No expenses to analyze yet.</p>
+            <p className="text-sm text-gray-400 dark:text-gray-500 mt-2">
               Start adding expenses to see your financial insights here.
             </p>
           </div>
@@ -58,37 +58,37 @@ export const ExpenseReport = ({ expenses }: ExpenseReportProps) => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
+        <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 transition-colors duration-300">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Total Spent</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-700 dark:text-gray-300">Total Spent</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${totalExpenses.toFixed(2)}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">${totalExpenses.toFixed(2)}</div>
+            <p className="text-xs text-muted-foreground dark:text-gray-400">
               {expenses.length} transactions
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 transition-colors duration-300">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Daily Average</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-700 dark:text-gray-300">Daily Average</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${dailyAverage.toFixed(2)}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">${dailyAverage.toFixed(2)}</div>
+            <p className="text-xs text-muted-foreground dark:text-gray-400">
               Across {uniqueDays} days
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 transition-colors duration-300">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Monthly Trend</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-700 dark:text-gray-300">Monthly Trend</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-2">
-              <div className="text-2xl font-bold">
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">
                 {Math.abs(monthlyTrend).toFixed(1)}%
               </div>
               {monthlyTrend >= 0 ? (
@@ -97,20 +97,20 @@ export const ExpenseReport = ({ expenses }: ExpenseReportProps) => {
                 <TrendingDown className="h-4 w-4 text-green-500" />
               )}
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground dark:text-gray-400">
               vs last month
             </p>
           </CardContent>
         </Card>
       </div>
 
-      <Card>
+      <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 transition-colors duration-300">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
             <PieChart className="h-5 w-5" />
             Top Categories
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="dark:text-gray-400">
             Your biggest spending categories
           </CardDescription>
         </CardHeader>
@@ -121,16 +121,16 @@ export const ExpenseReport = ({ expenses }: ExpenseReportProps) => {
               return (
                 <div key={category} className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="text-sm font-medium">#{index + 1}</div>
+                    <div className="text-sm font-medium text-gray-700 dark:text-gray-300">#{index + 1}</div>
                     <div>
-                      <p className="font-medium">{category}</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="font-medium text-gray-900 dark:text-white">{category}</p>
+                      <p className="text-sm text-muted-foreground dark:text-gray-400">
                         {percentage.toFixed(1)}% of total
                       </p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="font-semibold">${amount.toFixed(2)}</p>
+                    <p className="font-semibold text-gray-900 dark:text-white">${amount.toFixed(2)}</p>
                   </div>
                 </div>
               );
@@ -140,13 +140,13 @@ export const ExpenseReport = ({ expenses }: ExpenseReportProps) => {
       </Card>
 
       {sortedMonths.length > 1 && (
-        <Card>
+        <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 transition-colors duration-300">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
               <BarChart3 className="h-5 w-5" />
               Monthly Breakdown
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="dark:text-gray-400">
               Your spending over time
             </CardDescription>
           </CardHeader>
@@ -154,13 +154,13 @@ export const ExpenseReport = ({ expenses }: ExpenseReportProps) => {
             <div className="space-y-2">
               {sortedMonths.map(([month, amount]) => (
                 <div key={month} className="flex items-center justify-between py-2">
-                  <div className="font-medium">
+                  <div className="font-medium text-gray-900 dark:text-white">
                     {new Date(month + "-01").toLocaleDateString('en-US', { 
                       year: 'numeric', 
                       month: 'long' 
                     })}
                   </div>
-                  <div className="font-semibold">${amount.toFixed(2)}</div>
+                  <div className="font-semibold text-gray-900 dark:text-white">${amount.toFixed(2)}</div>
                 </div>
               ))}
             </div>
