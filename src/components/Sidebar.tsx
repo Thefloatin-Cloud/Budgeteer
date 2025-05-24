@@ -1,5 +1,5 @@
 
-import { Home, DollarSign, MessageSquare, Settings as SettingsIcon, Camera, Edit } from "lucide-react";
+import { Home, DollarSign, MessageSquare, Settings as SettingsIcon, Camera, Edit, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState, useRef } from "react";
@@ -21,8 +21,9 @@ export const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const navigation = [
-    { id: "home", label: "Home", icon: Home },
+    { id: "home", label: "Dashboard", icon: Home },
     { id: "expenses", label: "Expenses", icon: DollarSign },
+    { id: "report", label: "Reports", icon: BarChart3 },
     { id: "ai-chat", label: "AI Assistant", icon: MessageSquare },
     { id: "settings", label: "Settings", icon: SettingsIcon },
   ];
@@ -48,14 +49,17 @@ export const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
   };
 
   return (
-    <div className="w-64 bg-slate-900 text-white h-full p-6 flex flex-col animate-fade-in">
+    <div className="w-72 bg-white border-r border-gray-200 h-full p-6 flex flex-col">
+      {/* Header */}
       <div className="mb-8">
+        <h1 className="text-2xl font-bold text-gray-900 mb-8">Budgeteer</h1>
+        
         <div className="relative mb-4 group">
-          <Avatar className="w-12 h-12 cursor-pointer transition-all duration-200 hover:scale-105">
+          <Avatar className="w-16 h-16 cursor-pointer transition-all duration-200 hover:scale-105">
             {profilePic ? (
               <AvatarImage src={profilePic} alt="Profile" />
             ) : (
-              <AvatarFallback className="bg-teal-500 text-white font-bold text-lg">
+              <AvatarFallback className="bg-blue-500 text-white font-bold text-xl">
                 {userName.charAt(0).toUpperCase()}
               </AvatarFallback>
             )}
@@ -63,10 +67,10 @@ export const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
           <Button
             variant="ghost"
             size="sm"
-            className="absolute -bottom-1 -right-1 h-6 w-6 rounded-full bg-teal-500 hover:bg-teal-600 p-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+            className="absolute -bottom-1 -right-1 h-7 w-7 rounded-full bg-gray-100 hover:bg-gray-200 p-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 border border-gray-300"
             onClick={() => fileInputRef.current?.click()}
           >
-            <Camera className="h-3 w-3" />
+            <Camera className="h-3 w-3 text-gray-600" />
           </Button>
           <input
             ref={fileInputRef}
@@ -80,7 +84,7 @@ export const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
         {isEditingName ? (
           <Input
             defaultValue={userName}
-            className="text-xl font-semibold bg-slate-800 border-slate-600 text-white"
+            className="text-lg font-semibold bg-white border-gray-300 text-gray-900"
             onBlur={(e) => handleNameSave(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
@@ -94,13 +98,14 @@ export const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
           />
         ) : (
           <div className="flex items-center gap-2 group cursor-pointer" onClick={() => setIsEditingName(true)}>
-            <h2 className="text-xl font-semibold text-white">{userName}</h2>
-            <Edit className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+            <h2 className="text-lg font-semibold text-gray-900">{userName}</h2>
+            <Edit className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-500" />
           </div>
         )}
       </div>
 
-      <nav className="flex-1 space-y-2">
+      {/* Navigation */}
+      <nav className="flex-1 space-y-1">
         {navigation.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
@@ -109,25 +114,19 @@ export const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
             <Button
               key={item.id}
               variant="ghost"
-              className={`w-full justify-start text-left transition-all duration-200 hover:bg-slate-800 ${
+              className={`w-full justify-start text-left h-12 transition-all duration-200 ${
                 isActive 
-                  ? "bg-slate-800 text-teal-400 border-r-2 border-teal-400" 
-                  : "text-slate-300 hover:text-white"
+                  ? "bg-blue-50 text-blue-600 hover:bg-blue-50" 
+                  : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
               }`}
               onClick={() => onTabChange(item.id)}
             >
               <Icon className="h-5 w-5 mr-3" />
-              {item.label}
+              <span className="font-medium">{item.label}</span>
             </Button>
           );
         })}
       </nav>
-
-      <div className="mt-auto pt-6 border-t border-slate-700">
-        <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-800">
-          <div className="text-2xl font-bold text-teal-400">BUDGETEER</div>
-        </div>
-      </div>
     </div>
   );
 };

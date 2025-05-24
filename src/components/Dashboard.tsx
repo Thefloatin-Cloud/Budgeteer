@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, BarChart3, FileText, Save, StickyNote } from "lucide-react";
+import { Plus, BarChart3, FileText, Save, StickyNote, Edit } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Expense } from "@/pages/Index";
 
@@ -14,133 +14,192 @@ interface DashboardProps {
 
 export const Dashboard = ({ expenses, onTabChange }: DashboardProps) => {
   const [note, setNote] = useState("");
+  const [savedNote, setSavedNote] = useState("");
+  const [isEditingNote, setIsEditingNote] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     // Load saved note on component mount
-    const savedNote = localStorage.getItem("budgeteer-note");
-    if (savedNote) {
-      setNote(savedNote);
+    const savedNoteText = localStorage.getItem("budgeteer-note");
+    if (savedNoteText) {
+      setSavedNote(savedNoteText);
     }
   }, []);
 
   const handleSaveNote = () => {
     localStorage.setItem("budgeteer-note", note);
+    setSavedNote(note);
+    setNote("");
+    setIsEditingNote(false);
     toast({
       title: "Note saved",
       description: "Your note has been saved successfully!",
     });
   };
 
+  const handleEditNote = () => {
+    setNote(savedNote);
+    setIsEditingNote(true);
+  };
+
   const quickActions = [
     {
       label: "New expense",
       icon: Plus,
-      color: "bg-purple-600 hover:bg-purple-700",
+      color: "bg-blue-500 hover:bg-blue-600",
       action: () => onTabChange("expenses")
     },
     {
       label: "Check expenses",
       icon: FileText,
-      color: "bg-blue-600 hover:bg-blue-700",
+      color: "bg-green-500 hover:bg-green-600",
       action: () => onTabChange("expenses")
     },
     {
       label: "Create report",
       icon: BarChart3,
-      color: "bg-teal-600 hover:bg-teal-700",
+      color: "bg-purple-500 hover:bg-purple-600",
       action: () => onTabChange("report")
     }
   ];
 
+  const totalBalance = 5430; // Mock data
+  const income = 3200; // Mock data
+  const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+
   return (
-    <div className="h-full overflow-hidden">
-      <div className="h-full p-8 space-y-6">
-        {/* Top Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-1/2">
-          {/* Note Section */}
-          <div className="lg:col-span-2">
-            <Card className="bg-slate-700 border-slate-600 animate-scale-in h-full flex flex-col">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-white flex items-center gap-2">
-                  <StickyNote className="h-5 w-5 text-teal-400" />
-                  Personal Notes
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="flex-1 flex flex-col space-y-4">
-                <Textarea
-                  placeholder="Add your personal finance notes, reminders, or goals here..."
-                  value={note}
-                  onChange={(e) => setNote(e.target.value)}
-                  className="bg-slate-600 border-slate-500 text-white placeholder-slate-400 flex-1 transition-all duration-200 focus:ring-2 focus:ring-teal-400 resize-none"
-                />
-                <Button 
-                  onClick={handleSaveNote}
-                  className="w-full bg-teal-600 hover:bg-teal-700 text-white transition-all duration-200 hover:scale-105"
+    <div className="h-full p-6 bg-gray-50">
+      <div className="max-w-7xl mx-auto h-full">
+        {/* Top Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          <Card className="bg-white border-0 shadow-sm">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Total Balance</p>
+                  <p className="text-3xl font-bold text-gray-900">${totalBalance.toLocaleString()}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white border-0 shadow-sm">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Income</p>
+                  <p className="text-3xl font-bold text-green-600">${income.toLocaleString()}</p>
+                  <p className="text-sm text-green-600 mt-1">↑ 1,120.8%</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white border-0 shadow-sm">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Total Expenses</p>
+                  <p className="text-3xl font-bold text-red-600">${totalExpenses.toFixed(2)}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-280px)]">
+          {/* Notes Section */}
+          <Card className="bg-white border-0 shadow-sm">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                <StickyNote className="h-5 w-5 text-blue-500" />
+                Personal Notes
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {!isEditingNote && savedNote ? (
+                <div
+                  onClick={handleEditNote}
+                  className="p-4 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors duration-200 min-h-[120px] group"
                 >
-                  <Save className="h-4 w-4 mr-2" />
-                  Save Note
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
+                  <div className="flex items-start justify-between">
+                    <p className="text-gray-700 whitespace-pre-wrap">{savedNote}</p>
+                    <Edit className="h-4 w-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <Textarea
+                    placeholder="Add your personal finance notes, reminders, or goals here..."
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
+                    className="bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-500 min-h-[120px] resize-none"
+                  />
+                  <Button 
+                    onClick={handleSaveNote}
+                    className="w-full bg-blue-500 hover:bg-blue-600 text-white"
+                    disabled={!note.trim()}
+                  >
+                    <Save className="h-4 w-4 mr-2" />
+                    Save Note
+                  </Button>
+                </>
+              )}
+            </CardContent>
+          </Card>
 
           {/* Recent Expenses */}
-          <Card className="bg-slate-700 border-slate-600 animate-scale-in delay-100 h-full flex flex-col">
+          <Card className="bg-white border-0 shadow-sm">
             <CardHeader className="pb-4">
-              <CardTitle className="text-white">Recent Expenses</CardTitle>
+              <CardTitle className="text-lg font-semibold text-gray-900">Recent Expenses</CardTitle>
             </CardHeader>
-            <CardContent className="flex-1 overflow-hidden">
+            <CardContent>
               {expenses.length === 0 ? (
-                <div className="text-center py-8 h-full flex flex-col justify-center">
-                  <p className="text-slate-400 mb-4">No expenses recorded yet.</p>
+                <div className="text-center py-8">
+                  <p className="text-gray-500 mb-4">No expenses recorded yet.</p>
                   <Button
                     onClick={() => onTabChange("expenses")}
-                    className="bg-teal-600 hover:bg-teal-700 text-white transition-all duration-200 hover:scale-105"
+                    className="bg-blue-500 hover:bg-blue-600 text-white"
                   >
                     Add your first expense
                   </Button>
                 </div>
               ) : (
-                <div className="space-y-3 overflow-y-auto h-full">
-                  {expenses.slice(-5).reverse().map((expense, index) => (
+                <div className="space-y-3 max-h-64 overflow-y-auto">
+                  {expenses.slice(-5).reverse().map((expense) => (
                     <div 
                       key={expense.id}
-                      className="flex justify-between items-center p-3 bg-slate-600 rounded-lg transition-all duration-200 hover:bg-slate-500 animate-fade-in"
-                      style={{ animationDelay: `${index * 100}ms` }}
+                      className="flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200"
                     >
                       <div>
-                        <p className="text-white font-medium truncate">{expense.description}</p>
-                        <p className="text-slate-400 text-sm">{expense.category}</p>
+                        <p className="font-medium text-gray-900">{expense.description}</p>
+                        <p className="text-sm text-gray-500">{expense.category}</p>
                       </div>
-                      <span className="text-teal-400 font-bold">${expense.amount.toFixed(2)}</span>
+                      <span className="font-semibold text-gray-900">${expense.amount.toFixed(2)}</span>
                     </div>
                   ))}
                 </div>
               )}
             </CardContent>
           </Card>
-        </div>
 
-        {/* Bottom Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-1/2">
           {/* Quick Access */}
-          <Card className="bg-slate-700 border-slate-600 animate-scale-in delay-200 h-full flex flex-col">
+          <Card className="bg-white border-0 shadow-sm">
             <CardHeader className="pb-4">
-              <CardTitle className="text-white">Quick Access</CardTitle>
+              <CardTitle className="text-lg font-semibold text-gray-900">Quick Access</CardTitle>
             </CardHeader>
-            <CardContent className="flex-1">
-              <div className="grid grid-cols-1 gap-4 h-full">
-                {quickActions.map((action, index) => {
+            <CardContent>
+              <div className="grid grid-cols-1 gap-3">
+                {quickActions.map((action) => {
                   const Icon = action.icon;
                   return (
                     <Button
                       key={action.label}
                       onClick={action.action}
-                      className={`${action.color} text-white p-6 h-auto flex items-center gap-3 transition-all duration-200 hover:scale-105 animate-fade-in`}
-                      style={{ animationDelay: `${index * 100}ms` }}
+                      className={`${action.color} text-white justify-start h-12 transition-all duration-200 hover:scale-105`}
                     >
-                      <Icon className="h-6 w-6" />
+                      <Icon className="h-5 w-5 mr-3" />
                       <span className="font-medium">{action.label}</span>
                     </Button>
                   );
@@ -149,26 +208,26 @@ export const Dashboard = ({ expenses, onTabChange }: DashboardProps) => {
             </CardContent>
           </Card>
 
-          {/* Monthly Spending Overview */}
-          <Card className="bg-slate-700 border-slate-600 animate-scale-in delay-300 h-full flex flex-col">
+          {/* Spending Overview */}
+          <Card className="bg-white border-0 shadow-sm">
             <CardHeader className="pb-4">
-              <CardTitle className="text-white">Spending Overview</CardTitle>
+              <CardTitle className="text-lg font-semibold text-gray-900">Spending Overview</CardTitle>
             </CardHeader>
-            <CardContent className="flex-1 flex flex-col justify-center">
+            <CardContent className="flex flex-col justify-center">
               {expenses.length === 0 ? (
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-slate-600 rounded-lg mx-auto mb-4 flex items-center justify-center">
-                    <BarChart3 className="h-8 w-8 text-slate-400" />
+                  <div className="w-16 h-16 bg-gray-100 rounded-lg mx-auto mb-4 flex items-center justify-center">
+                    <BarChart3 className="h-8 w-8 text-gray-400" />
                   </div>
-                  <p className="text-slate-400">No spending data available yet.</p>
+                  <p className="text-gray-500">No spending data available yet.</p>
                 </div>
               ) : (
                 <div className="text-center">
-                  <p className="text-3xl font-bold text-teal-400 mb-2">
-                    ${expenses.reduce((sum, expense) => sum + expense.amount, 0).toFixed(2)}
+                  <p className="text-3xl font-bold text-gray-900 mb-2">
+                    ${totalExpenses.toFixed(2)}
                   </p>
-                  <p className="text-slate-400 mb-4">Total spent this period</p>
-                  <p className="text-lg text-white">
+                  <p className="text-gray-500 mb-4">Total spent this period</p>
+                  <p className="text-lg text-gray-700">
                     {expenses.length} transaction{expenses.length !== 1 ? 's' : ''}
                   </p>
                 </div>

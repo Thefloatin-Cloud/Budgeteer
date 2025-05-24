@@ -66,14 +66,14 @@ const Index = () => {
       case "expenses":
         return (
           <div className="h-full flex">
-            <div className="w-1/2 p-6 border-r border-slate-600">
+            <div className="w-1/2 p-4 border-r border-gray-200">
               <ExpenseTracker 
                 expenses={expenses} 
                 onAddExpense={addExpense}
                 onDeleteExpense={deleteExpense}
               />
             </div>
-            <div className="w-1/2 p-6">
+            <div className="w-1/2 p-4">
               <ExpenseCategories 
                 expenses={expenses}
                 onDeleteExpense={deleteExpense}
@@ -83,19 +83,19 @@ const Index = () => {
         );
       case "report":
         return (
-          <div className="h-full p-8 overflow-hidden">
+          <div className="h-full p-6 overflow-auto">
             <ExpenseReport expenses={expenses} />
           </div>
         );
       case "ai-chat":
         return (
-          <div className="h-full p-8 overflow-hidden">
+          <div className="h-full p-6 overflow-auto">
             <AIChat expenses={expenses} apiKey={apiKey} />
           </div>
         );
       case "settings":
         return (
-          <div className="h-full p-8 overflow-hidden">
+          <div className="h-full p-6 overflow-auto">
             <Settings apiKey={apiKey} onSaveApiKey={saveApiKey} />
           </div>
         );
@@ -105,10 +105,10 @@ const Index = () => {
   };
 
   return (
-    <div className="h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-slate-900 flex flex-col overflow-hidden">
+    <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
       <div className="flex flex-1 w-full overflow-hidden">
         <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
-        <div className="flex-1 bg-slate-800 overflow-hidden">
+        <div className="flex-1 bg-white overflow-hidden">
           {renderContent()}
         </div>
       </div>
