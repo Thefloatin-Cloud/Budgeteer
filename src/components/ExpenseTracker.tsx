@@ -4,9 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { Expense } from "@/pages/Index";
 
@@ -29,7 +28,7 @@ const categories = [
   "Other"
 ];
 
-export const ExpenseTracker = ({ expenses, onAddExpense, onDeleteExpense }: ExpenseTrackerProps) => {
+export const ExpenseTracker = ({ expenses, onAddExpense }: ExpenseTrackerProps) => {
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
@@ -70,122 +69,113 @@ export const ExpenseTracker = ({ expenses, onAddExpense, onDeleteExpense }: Expe
   const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0);
 
   return (
-    <div className="space-y-6">
-      <Card>
+    <div className="h-full flex flex-col">
+      <Card className="bg-slate-700 border-slate-600 mb-6">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Plus className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 text-white">
+            <Plus className="h-5 w-5 text-teal-400" />
             Add New Expense
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-slate-300">
             Track your daily expenses with ease
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="amount">Amount ($)</Label>
-              <Input
-                id="amount"
-                type="number"
-                step="0.01"
-                placeholder="0.00"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-              />
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="amount" className="text-white">Amount ($)</Label>
+                <Input
+                  id="amount"
+                  type="number"
+                  step="0.01"
+                  placeholder="0.00"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  className="bg-slate-600 border-slate-500 text-white placeholder-slate-400"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="category" className="text-white">Category</Label>
+                <Select value={category} onValueChange={setCategory}>
+                  <SelectTrigger className="bg-slate-600 border-slate-500 text-white">
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-slate-600 border-slate-500">
+                    {categories.map((cat) => (
+                      <SelectItem key={cat} value={cat} className="text-white hover:bg-slate-500">
+                        {cat}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="description" className="text-white">Description</Label>
+                <Input
+                  id="description"
+                  placeholder="What did you spend on?"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="bg-slate-600 border-slate-500 text-white placeholder-slate-400"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="date" className="text-white">Date</Label>
+                <Input
+                  id="date"
+                  type="date"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="bg-slate-600 border-slate-500 text-white"
+                />
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="category">Category</Label>
-              <Select value={category} onValueChange={setCategory}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((cat) => (
-                    <SelectItem key={cat} value={cat}>
-                      {cat}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
-              <Input
-                id="description"
-                placeholder="What did you spend on?"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="date">Date</Label>
-              <Input
-                id="date"
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-              />
-            </div>
-
-            <div className="md:col-span-2">
-              <Button type="submit" className="w-full">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Expense
-              </Button>
-            </div>
+            <Button type="submit" className="w-full bg-teal-600 hover:bg-teal-700 transition-all duration-200 hover:scale-105">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Expense
+            </Button>
           </form>
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Expenses</CardTitle>
-          <CardDescription>
-            Total: ${totalExpenses.toFixed(2)}
+      <Card className="bg-slate-700 border-slate-600 flex-1 flex flex-col">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-white">Quick Summary</CardTitle>
+          <CardDescription className="text-slate-300">
+            Total: ${totalExpenses.toFixed(2)} • {expenses.length} expense{expenses.length !== 1 ? 's' : ''}
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex-1 overflow-hidden">
           {expenses.length === 0 ? (
-            <p className="text-center text-gray-500 py-8">
-              No expenses added yet. Start tracking your spending!
-            </p>
+            <div className="text-center py-8 text-slate-400 h-full flex items-center justify-center">
+              <div>
+                <Plus className="h-12 w-12 mx-auto mb-4 text-slate-500" />
+                <p>No expenses added yet. Start tracking your spending!</p>
+              </div>
+            </div>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Description</TableHead>
-                  <TableHead>Category</TableHead>
-                  <TableHead>Amount</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {expenses
-                  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-                  .map((expense) => (
-                    <TableRow key={expense.id}>
-                      <TableCell>{new Date(expense.date).toLocaleDateString()}</TableCell>
-                      <TableCell>{expense.description}</TableCell>
-                      <TableCell>{expense.category}</TableCell>
-                      <TableCell>${expense.amount.toFixed(2)}</TableCell>
-                      <TableCell>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => onDeleteExpense(expense.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
+            <div className="space-y-3 overflow-y-auto h-full">
+              {expenses
+                .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                .slice(0, 5)
+                .map((expense) => (
+                  <div 
+                    key={expense.id}
+                    className="flex justify-between items-center p-3 bg-slate-600 rounded-lg transition-all duration-200 hover:bg-slate-500"
+                  >
+                    <div>
+                      <p className="text-white font-medium">{expense.description}</p>
+                      <p className="text-slate-400 text-sm">{expense.category}</p>
+                    </div>
+                    <span className="text-teal-400 font-bold">${expense.amount.toFixed(2)}</span>
+                  </div>
+                ))}
+            </div>
           )}
         </CardContent>
       </Card>

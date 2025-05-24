@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ExpenseTracker } from "@/components/ExpenseTracker";
+import { ExpenseCategories } from "@/components/ExpenseCategories";
 import { AIChat } from "@/components/AIChat";
 import { Settings } from "@/components/Settings";
 import { ExpenseReport } from "@/components/ExpenseReport";
@@ -65,11 +65,17 @@ const Index = () => {
         return <Dashboard expenses={expenses} onTabChange={setActiveTab} />;
       case "expenses":
         return (
-          <div className="flex-1 bg-slate-800 p-8 animate-fade-in">
-            <div className="max-w-4xl mx-auto">
+          <div className="h-full flex">
+            <div className="w-1/2 p-6 border-r border-slate-600">
               <ExpenseTracker 
                 expenses={expenses} 
                 onAddExpense={addExpense}
+                onDeleteExpense={deleteExpense}
+              />
+            </div>
+            <div className="w-1/2 p-6">
+              <ExpenseCategories 
+                expenses={expenses}
                 onDeleteExpense={deleteExpense}
               />
             </div>
@@ -77,26 +83,20 @@ const Index = () => {
         );
       case "report":
         return (
-          <div className="flex-1 bg-slate-800 p-8 animate-fade-in">
-            <div className="max-w-4xl mx-auto">
-              <ExpenseReport expenses={expenses} />
-            </div>
+          <div className="h-full p-8 overflow-hidden">
+            <ExpenseReport expenses={expenses} />
           </div>
         );
       case "ai-chat":
         return (
-          <div className="flex-1 bg-slate-800 p-8 animate-fade-in">
-            <div className="max-w-4xl mx-auto">
-              <AIChat expenses={expenses} apiKey={apiKey} />
-            </div>
+          <div className="h-full p-8 overflow-hidden">
+            <AIChat expenses={expenses} apiKey={apiKey} />
           </div>
         );
       case "settings":
         return (
-          <div className="flex-1 bg-slate-800 p-8 animate-fade-in">
-            <div className="max-w-4xl mx-auto">
-              <Settings apiKey={apiKey} onSaveApiKey={saveApiKey} />
-            </div>
+          <div className="h-full p-8 overflow-hidden">
+            <Settings apiKey={apiKey} onSaveApiKey={saveApiKey} />
           </div>
         );
       default:
@@ -105,10 +105,12 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-slate-900 flex flex-col">
-      <div className="flex flex-1 w-full">
+    <div className="h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-slate-900 flex flex-col overflow-hidden">
+      <div className="flex flex-1 w-full overflow-hidden">
         <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
-        {renderContent()}
+        <div className="flex-1 bg-slate-800 overflow-hidden">
+          {renderContent()}
+        </div>
       </div>
       <Footer />
     </div>
