@@ -1,12 +1,12 @@
 
 import { useState, useEffect } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ExpenseTracker } from "@/components/ExpenseTracker";
 import { AIChat } from "@/components/AIChat";
 import { Settings } from "@/components/Settings";
 import { ExpenseReport } from "@/components/ExpenseReport";
-import { DollarSign, MessageSquare, Settings as SettingsIcon, BarChart3 } from "lucide-react";
+import { Sidebar } from "@/components/Sidebar";
+import { Dashboard } from "@/components/Dashboard";
 import { Footer } from "@/components/Footer";
 
 export interface Expense {
@@ -21,6 +21,7 @@ export interface Expense {
 const Index = () => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [apiKey, setApiKey] = useState<string>("");
+  const [activeTab, setActiveTab] = useState<string>("home");
 
   useEffect(() => {
     // Load expenses from localStorage
@@ -58,62 +59,56 @@ const Index = () => {
     localStorage.setItem("budgeteer-api-key", key);
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-teal-50 flex flex-col">
-      <div className="flex-1 px-4 py-8 md:px-8 lg:px-12 max-w-7xl mx-auto w-full">
-        <Card className="mb-8 overflow-hidden border-none shadow-lg animate-fade-in">
-          <CardHeader className="text-center bg-gradient-to-r from-teal-600 to-blue-600 text-white py-6">
-            <CardTitle className="text-3xl md:text-4xl font-bold tracking-tight">
-              Budgeteer
-            </CardTitle>
-            <CardDescription className="text-lg text-teal-50">
-              Smart Financial Planning & Insights
-            </CardDescription>
-          </CardHeader>
-        </Card>
-
-        <Tabs defaultValue="expenses" className="w-full animate-fade-in">
-          <TabsList className="grid w-full grid-cols-4 mb-8 shadow-md">
-            <TabsTrigger value="expenses" className="flex items-center gap-2 data-[state=active]:bg-teal-600 data-[state=active]:text-white transition-all duration-200">
-              <DollarSign className="h-4 w-4" />
-              Expenses
-            </TabsTrigger>
-            <TabsTrigger value="report" className="flex items-center gap-2 data-[state=active]:bg-teal-600 data-[state=active]:text-white transition-all duration-200">
-              <BarChart3 className="h-4 w-4" />
-              Report
-            </TabsTrigger>
-            <TabsTrigger value="ai-chat" className="flex items-center gap-2 data-[state=active]:bg-teal-600 data-[state=active]:text-white transition-all duration-200">
-              <MessageSquare className="h-4 w-4" />
-              AI Assistant
-            </TabsTrigger>
-            <TabsTrigger value="settings" className="flex items-center gap-2 data-[state=active]:bg-teal-600 data-[state=active]:text-white transition-all duration-200">
-              <SettingsIcon className="h-4 w-4" />
-              Settings
-            </TabsTrigger>
-          </TabsList>
-
-          <div className="p-1 md:p-2">
-            <TabsContent value="expenses" className="mt-0">
+  const renderContent = () => {
+    switch (activeTab) {
+      case "home":
+        return <Dashboard expenses={expenses} onTabChange={setActiveTab} />;
+      case "expenses":
+        return (
+          <div className="flex-1 bg-slate-800 p-8 animate-fade-in">
+            <div className="max-w-4xl mx-auto">
               <ExpenseTracker 
                 expenses={expenses} 
                 onAddExpense={addExpense}
                 onDeleteExpense={deleteExpense}
               />
-            </TabsContent>
-
-            <TabsContent value="report" className="mt-0">
-              <ExpenseReport expenses={expenses} />
-            </TabsContent>
-
-            <TabsContent value="ai-chat" className="mt-0">
-              <AIChat expenses={expenses} apiKey={apiKey} />
-            </TabsContent>
-
-            <TabsContent value="settings" className="mt-0">
-              <Settings apiKey={apiKey} onSaveApiKey={saveApiKey} />
-            </TabsContent>
+            </div>
           </div>
-        </Tabs>
+        );
+      case "report":
+        return (
+          <div className="flex-1 bg-slate-800 p-8 animate-fade-in">
+            <div className="max-w-4xl mx-auto">
+              <ExpenseReport expenses={expenses} />
+            </div>
+          </div>
+        );
+      case "ai-chat":
+        return (
+          <div className="flex-1 bg-slate-800 p-8 animate-fade-in">
+            <div className="max-w-4xl mx-auto">
+              <AIChat expenses={expenses} apiKey={apiKey} />
+            </div>
+          </div>
+        );
+      case "settings":
+        return (
+          <div className="flex-1 bg-slate-800 p-8 animate-fade-in">
+            <div className="max-w-4xl mx-auto">
+              <Settings apiKey={apiKey} onSaveApiKey={saveApiKey} />
+            </div>
+          </div>
+        );
+      default:
+        return <Dashboard expenses={expenses} onTabChange={setActiveTab} />;
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-slate-900 flex flex-col">
+      <div className="flex flex-1 w-full">
+        <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
+        {renderContent()}
       </div>
       <Footer />
     </div>
