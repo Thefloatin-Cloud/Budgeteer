@@ -9,7 +9,7 @@ import { Expense } from "@/pages/Index";
 
 interface DashboardProps {
   expenses: Expense[];
-  onTabChange: (tab: string) => void;
+  onTabChange: (tab: string, initialPrompt?: string) => void;
 }
 
 export const Dashboard = ({ expenses, onTabChange }: DashboardProps) => {
@@ -58,7 +58,7 @@ export const Dashboard = ({ expenses, onTabChange }: DashboardProps) => {
       label: "Create report",
       icon: BarChart3,
       color: "bg-purple-500 hover:bg-purple-600 dark:bg-purple-600 dark:hover:bg-purple-700",
-      action: () => onTabChange("report")
+      action: () => onTabChange("ai-chat", "Give me a detailed report on my expenses including spending patterns, top categories, and financial recommendations.")
     }
   ];
 

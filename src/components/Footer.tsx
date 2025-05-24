@@ -35,7 +35,7 @@ export const Footer = () => {
           <Tooltip>
             <TooltipTrigger asChild>
               <a 
-                href="#" 
+                href="https://www.instagram.com/thefloatin_cloud/profilecard/?igsh=MThjbmhjMDd4NnI3Yw==" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 aria-label="Instagram"
@@ -54,7 +54,7 @@ export const Footer = () => {
           <Tooltip>
             <TooltipTrigger asChild>
               <a 
-                href="#" 
+                href="https://www.linkedin.com/in/apoorvmane?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 aria-label="LinkedIn"

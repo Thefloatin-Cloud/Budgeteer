@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { ExpenseTracker } from "@/components/ExpenseTracker";
 import { ExpenseCategories } from "@/components/ExpenseCategories";
@@ -23,6 +22,7 @@ const Index = () => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [apiKey, setApiKey] = useState<string>("");
   const [activeTab, setActiveTab] = useState<string>("home");
+  const [aiInitialPrompt, setAiInitialPrompt] = useState<string>("");
 
   useEffect(() => {
     // Load expenses from localStorage
@@ -60,10 +60,19 @@ const Index = () => {
     localStorage.setItem("budgeteer-api-key", key);
   };
 
+  const handleTabChange = (tab: string, initialPrompt?: string) => {
+    setActiveTab(tab);
+    if (initialPrompt) {
+      setAiInitialPrompt(initialPrompt);
+    } else {
+      setAiInitialPrompt("");
+    }
+  };
+
   const renderContent = () => {
     switch (activeTab) {
       case "home":
-        return <Dashboard expenses={expenses} onTabChange={setActiveTab} />;
+        return <Dashboard expenses={expenses} onTabChange={handleTabChange} />;
       case "expenses":
         return (
           <div className="h-full flex bg-gray-50 dark:bg-black transition-colors duration-300">
@@ -91,7 +100,7 @@ const Index = () => {
       case "ai-chat":
         return (
           <div className="h-full p-6 overflow-auto bg-gray-50 dark:bg-black transition-colors duration-300">
-            <AIChat expenses={expenses} apiKey={apiKey} />
+            <AIChat expenses={expenses} apiKey={apiKey} initialPrompt={aiInitialPrompt} />
           </div>
         );
       case "settings":
@@ -101,7 +110,7 @@ const Index = () => {
           </div>
         );
       default:
-        return <Dashboard expenses={expenses} onTabChange={setActiveTab} />;
+        return <Dashboard expenses={expenses} onTabChange={handleTabChange} />;
     }
   };
 
@@ -109,7 +118,7 @@ const Index = () => {
     <ThemeProvider defaultTheme="light" storageKey="budgeteer-theme">
       <div className="h-screen bg-gray-50 dark:bg-black flex flex-col overflow-hidden transition-colors duration-300">
         <div className="flex flex-1 w-full overflow-hidden">
-          <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
+          <Sidebar activeTab={activeTab} onTabChange={handleTabChange} />
           <div className="flex-1 bg-white dark:bg-gray-900 overflow-hidden transition-colors duration-300">
             {renderContent()}
           </div>

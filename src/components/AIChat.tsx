@@ -11,6 +11,7 @@ import type { Expense } from "@/pages/Index";
 interface AIChatProps {
   expenses: Expense[];
   apiKey: string;
+  initialPrompt?: string;
 }
 
 interface Message {
@@ -20,11 +21,20 @@ interface Message {
   timestamp: string;
 }
 
-export const AIChat = ({ expenses, apiKey }: AIChatProps) => {
+export const AIChat = ({ expenses, apiKey, initialPrompt }: AIChatProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+
+  // Send initial prompt if provided
+  useState(() => {
+    if (initialPrompt) {
+      setInput(initialPrompt);
+      // Automatically send the initial prompt
+      setTimeout(() => sendMessage(initialPrompt), 100);
+    }
+  });
 
   const generateExpenseContext = () => {
     if (expenses.length === 0) {
@@ -50,8 +60,9 @@ Expense Summary:
 `;
   };
 
-  const sendMessage = async () => {
-    if (!input.trim()) return;
+  const sendMessage = async (messageText?: string) => {
+    const textToSend = messageText || input;
+    if (!textToSend.trim()) return;
     
     if (!apiKey) {
       toast({
@@ -64,7 +75,7 @@ Expense Summary:
 
     const userMessage: Message = {
       id: Date.now().toString(),
-      content: input,
+      content: textToSend,
       role: "user",
       timestamp: new Date().toISOString(),
     };
@@ -82,12 +93,12 @@ Expense Summary:
         body: JSON.stringify({
           contents: [{
             parts: [{
-              text: `You are a helpful financial assistant for Budgeteer, an expense tracking app. You help users analyze their spending patterns, provide budgeting advice, and answer questions about their expenses.
+              text: `You are Gideon, a helpful financial assistant for Budgeteer, an expense tracking app. You help users analyze their spending patterns, provide budgeting advice, and answer questions about their expenses. Always identify yourself as Gideon when introducing yourself.
 
 Current user's expense data:
 ${generateExpenseContext()}
 
-User question: ${input}
+User question: ${textToSend}
 
 Be helpful, concise, and provide actionable financial advice. If asked about expenses, refer to the actual data provided above.`
             }]
@@ -132,22 +143,22 @@ Be helpful, concise, and provide actionable financial advice. If asked about exp
   };
 
   return (
-    <Card className="h-[600px] flex flex-col overflow-hidden border-none shadow-lg">
-      <CardHeader className="bg-gradient-to-r from-teal-600/10 to-blue-600/10">
-        <CardTitle className="flex items-center gap-2 text-teal-700">
+    <Card className="h-[600px] flex flex-col overflow-hidden border-none shadow-lg bg-white dark:bg-gray-900">
+      <CardHeader className="bg-gradient-to-r from-teal-600/10 to-blue-600/10 dark:from-teal-600/20 dark:to-blue-600/20">
+        <CardTitle className="flex items-center gap-2 text-teal-700 dark:text-teal-300">
           <Bot className="h-5 w-5" />
-          Financial Assistant
+          Gideon - Financial Assistant
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="dark:text-gray-300">
           Ask me anything about your expenses, budgeting, or financial advice
         </CardDescription>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col p-0">
         <ScrollArea className="flex-1 p-4 border-0">
           {messages.length === 0 ? (
-            <div className="text-center text-gray-500 mt-8 animate-fade-in">
+            <div className="text-center text-gray-500 dark:text-gray-400 mt-8 animate-fade-in">
               <MessageSquare className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <p>Start a conversation with your AI assistant!</p>
+              <p>Start a conversation with Gideon, your AI assistant!</p>
               <p className="text-sm mt-2">
                 Try asking: "Give me a report on my spending" or "How can I reduce my expenses?"
               </p>
@@ -163,37 +174,39 @@ Be helpful, concise, and provide actionable financial advice. If asked about exp
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   {message.role === "assistant" && (
-                    <div className="bg-teal-100 p-2 rounded-full">
-                      <Bot className="h-6 w-6 text-teal-600" />
+                    <div className="bg-teal-100 dark:bg-teal-900 p-2 rounded-full">
+                      <Bot className="h-6 w-6 text-teal-600 dark:text-teal-300" />
                     </div>
                   )}
                   <div
                     className={`max-w-[80%] p-4 rounded-lg shadow-md ${
                       message.role === "user"
                         ? "bg-gradient-to-r from-teal-500 to-blue-500 text-white"
-                        : "bg-white border border-slate-100"
+                        : "bg-white dark:bg-gray-800 border border-slate-100 dark:border-gray-700 text-gray-900 dark:text-gray-100"
                     }`}
                   >
                     <p className="whitespace-pre-wrap">{message.content}</p>
-                    <p className="text-xs mt-2 opacity-70">
+                    <p className={`text-xs mt-2 opacity-70 ${
+                      message.role === "user" ? "text-white" : "text-gray-500 dark:text-gray-400"
+                    }`}>
                       {new Date(message.timestamp).toLocaleTimeString()}
                     </p>
                   </div>
                   {message.role === "user" && (
-                    <div className="bg-blue-100 p-2 rounded-full">
-                      <User className="h-6 w-6 text-blue-600" />
+                    <div className="bg-blue-100 dark:bg-blue-900 p-2 rounded-full">
+                      <User className="h-6 w-6 text-blue-600 dark:text-blue-300" />
                     </div>
                   )}
                 </div>
               ))}
               {isLoading && (
                 <div className="flex items-start gap-3 animate-pulse">
-                  <div className="bg-teal-100 p-2 rounded-full">
-                    <Bot className="h-6 w-6 text-teal-600" />
+                  <div className="bg-teal-100 dark:bg-teal-900 p-2 rounded-full">
+                    <Bot className="h-6 w-6 text-teal-600 dark:text-teal-300" />
                   </div>
-                  <div className="bg-white p-4 rounded-lg shadow-md max-w-[80%] border border-slate-100">
-                    <div className="h-4 bg-slate-200 rounded w-3/4 mb-2"></div>
-                    <div className="h-4 bg-slate-200 rounded w-1/2"></div>
+                  <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md max-w-[80%] border border-slate-100 dark:border-gray-700">
+                    <div className="h-4 bg-slate-200 dark:bg-gray-600 rounded w-3/4 mb-2"></div>
+                    <div className="h-4 bg-slate-200 dark:bg-gray-600 rounded w-1/2"></div>
                   </div>
                 </div>
               )}
@@ -201,17 +214,17 @@ Be helpful, concise, and provide actionable financial advice. If asked about exp
           )}
         </ScrollArea>
         
-        <div className="p-4 border-t border-slate-200 bg-slate-50">
+        <div className="p-4 border-t border-slate-200 dark:border-gray-700 bg-slate-50 dark:bg-gray-800">
           <div className="flex gap-2">
             <Textarea
-              placeholder="Ask me about your expenses..."
+              placeholder="Ask Gideon about your expenses..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyPress}
-              className="flex-1 resize-none focus-visible:ring-teal-500"
+              className="flex-1 resize-none focus-visible:ring-teal-500 bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-100"
               rows={2}
             />
-            <Button onClick={sendMessage} disabled={isLoading} className="self-end bg-teal-600 hover:bg-teal-700 transition-all duration-200 hover:scale-105">
+            <Button onClick={() => sendMessage()} disabled={isLoading} className="self-end bg-teal-600 hover:bg-teal-700 transition-all duration-200 hover:scale-105">
               <Send className="h-4 w-4" />
             </Button>
           </div>
